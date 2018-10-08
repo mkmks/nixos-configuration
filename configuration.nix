@@ -181,6 +181,7 @@ in
       iw
       isync
       lftp
+      msmtp
       mu
       nmap      
 
