@@ -100,13 +100,10 @@ in
   environment = {
   
     sessionVariables = {
-      _JAVA_AWT_WM_NONREPARENTING = "1";
-      QT_STYLE_OVERRIDE = "adwaita";
-      GTK_THEME = "Adwaita";
+      _JAVA_AWT_WM_NONREPARENTING = "1";    
+      GTK_THEME = "Adwaita:dark";
 #      GTK_DATA_PREFIX = "${config.system.path}";
       GTK_PATH = "${config.system.path}/lib/gtk-3.0:${config.system.path}/lib/gtk-2.0";
-#      LIBGL_DISABLE_DRI3 = "1";
-#      GDK_SCALE = "2";
     };
   
     systemPackages = with pkgs; with haskellPackages; [
@@ -114,6 +111,7 @@ in
       firefox-bin
       libreoffice
       skypeforlinux
+      spotify
       steam
       unstable.tdesktop      
 
@@ -123,6 +121,7 @@ in
       baobab
       gthumb
       pavucontrol
+      unstable.adwaita-qt
       
       calibre
       feh
@@ -217,6 +216,7 @@ in
     fish.enable = true;    
     gnupg.agent.enable = true;
     gnupg.agent.enableSSHSupport = true;
+    qt5ct.enable = true;
     tmux = {
       enable = true;         
 
@@ -255,7 +255,6 @@ in
   # List services that you want to enable:
 
   services = {
-
     dbus.packages = [ pkgs.gnome3.dconf ];
 
     emacs = {
@@ -265,25 +264,7 @@ in
 	    };
 
     gnome3.gnome-keyring.enable = true;
-
     illum.enable = true;
-
-    mopidy = {
-      enable = true;
-      extensionPackages = [ pkgs.mopidy-spotify pkgs.mopidy-iris ];
-
-      configuration = ''
-[audio]
-output = pulsesink server=127.0.0.1
-
-[spotify]
-username = ${secrets.spotify.username}
-password = ${secrets.spotify.password}
-client_id = ${secrets.spotify.client_id}
-client_secret = ${secrets.spotify.client_secret}
-bitrate = 320
-      '';
-    };
 
     openssh.enable = false;
 
@@ -370,8 +351,7 @@ bitrate = 320
   };
 
     user = {
-      services = {
-    
+      services = {    
         mbsync = {
           description = "Mailbox syncronization";
 
