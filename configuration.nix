@@ -111,20 +111,24 @@ in
   
     systemPackages = with pkgs; with haskellPackages; [
       # desktop
-      pkgs.st
+      firefox-bin
+      libreoffice
+      skypeforlinux
+      steam
+      unstable.tdesktop      
 
-#      adwaita-qt
+      gnome3.dconf-editor
+      gnome3.libsecret
+      gnome3.seahorse
       baobab
+      gthumb
+      pavucontrol
+      
       calibre
       feh
-      firefox-bin
       goldendict
-      gthumb
-      libreoffice
       mpv
-      pavucontrol
-      steam
-      unstable.tdesktop
+      st
       zathura
 
       # system
@@ -171,7 +175,6 @@ in
       valgrind
 
       # networking
-      cadaver
       dnsutils
       gnupg
       inetutils
@@ -209,7 +212,8 @@ in
   programs = {
     adb.enable = true;
     bash.enableCompletion = true;
-    fish.enable = true;
+    dconf.enable = true;
+    fish.enable = true;    
     gnupg.agent.enable = true;
     gnupg.agent.enableSSHSupport = true;
     ssh.startAgent = false;
@@ -237,17 +241,23 @@ in
     };   
   };
 
-  security.polkit.extraConfig = ''
-    polkit.addRule(function(action, subject) {
-        if (subject.isInGroup('wheel') && subject.local) {
-          return polkit.Result.YES;
-        }
+  security = {
+    pam.services.lightdm.enableGnomeKeyring = true;
+
+    polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+          if (subject.isInGroup('wheel') && subject.local) {
+            return polkit.Result.YES;
+          }
       });
-  '';  
+    '';
+  };
 
   # List services that you want to enable:
 
   services = {
+
+    dbus.packages = [ pkgs.gnome3.dconf ];
 
     emacs = {
       enable = true;
@@ -255,11 +265,13 @@ in
       #  package = unstable.emacs26.override { withGTK2 = false; withGTK3 = true; };
 	    };
 
+    gnome3.gnome-keyring.enable = true;
+
     illum.enable = true;
 
     mopidy = {
       enable = true;
-      extensionPackages = [ pkgs.mopidy-spotify pkgs.mopidy-spotify-tunigo pkgs.mopidy-iris ];
+      extensionPackages = [ pkgs.mopidy-spotify pkgs.mopidy-iris ];
 
       configuration = ''
 [audio]
@@ -303,6 +315,7 @@ bitrate = 320
     };
 
     transmission.enable = true;
+    transmission.home = "/home/transmission";
     udisks2.enable = true;
         
     
@@ -336,10 +349,6 @@ bitrate = 320
   };
 
   systemd = {
-    extraConfig = ''
-      DefaultTimeoutStopSec=10s
-    '';
-
     services.powertop = {
       description = ''
         enables powertop's recommended settings on boot
