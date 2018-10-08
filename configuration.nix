@@ -216,8 +216,6 @@ in
     fish.enable = true;    
     gnupg.agent.enable = true;
     gnupg.agent.enableSSHSupport = true;
-    ssh.startAgent = false;
-    slock.enable = true;
     tmux = {
       enable = true;         
 
@@ -381,9 +379,9 @@ bitrate = 320
             ExecStart = "${pkgs.isync}/bin/mbsync -aq";
           };
 
-       	  path = [ pkgs.gawk pkgs.gnupg ];
+       	  path = [ pkgs.gnome3.libsecret ];
 
-          after       = [ "network-online.target" "gpg-agent.service" ];
+          after       = [ "network-online.target" ];
           wantedBy    = [ "default.target" ];
         };
       };
