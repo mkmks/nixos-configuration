@@ -101,7 +101,6 @@ in
     sessionVariables = {
       _JAVA_AWT_WM_NONREPARENTING = "1";    
       GTK_THEME = "Adwaita:dark";
-#      GTK_DATA_PREFIX = "${config.system.path}";
       GTK_PATH = "${config.system.path}/lib/gtk-3.0:${config.system.path}/lib/gtk-2.0";
     };
   
@@ -114,20 +113,21 @@ in
       steam
       unstable.tdesktop      
 
+      gnome3.adwaita-icon-theme
       gnome3.dconf-editor
+      gnome3.eog
+      gnome3.gnome-themes-extra      
       gnome3.libsecret
       gnome3.seahorse
       baobab
+      gnome-mpv
       gthumb
       pavucontrol
+
       unstable.adwaita-qt
-      
       calibre
-      feh
       goldendict
-      mpv
-      st
-      zathura
+      qpdfview
 
       # system
       acpi
