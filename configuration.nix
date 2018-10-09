@@ -12,7 +12,6 @@ let
   unstable = import unstableTarball {
                config = config.nixpkgs.config;
              };
-  secrets = import ./secrets.nix;
 in
 
 {
@@ -256,6 +255,7 @@ in
 
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
+    gnome3.gnome-keyring.enable = true;
 
     emacs = {
       enable = true;
@@ -263,7 +263,7 @@ in
       #  package = unstable.emacs26.override { withGTK2 = false; withGTK3 = true; };
 	    };
 
-    gnome3.gnome-keyring.enable = true;
+    fstrim.enable = true;
     illum.enable = true;
 
     openssh.enable = false;
