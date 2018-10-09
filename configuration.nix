@@ -320,8 +320,20 @@ in
       desktopManager.default = "none";
 
       windowManager = {
-        i3.enable = true;
-        i3.extraPackages = with pkgs; [ dmenu unstable.i3status-rust i3lock ];
+        i3 = {
+          enable = true;
+          extraPackages = with pkgs; [ dmenu unstable.i3status-rust i3lock ];
+          extraSessionCommands = ''
+	    xcalib /etc/X11/B140QAN02_0_02-10-2018.icm
+            xsetroot -bg black
+            xsetroot -cursor_name left_ptr
+
+            if [ -d "$XDG_RUNTIME_DIR/gnupg/" ]; then
+                export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh"
+                ${pkgs.gnupg}/gpg-connect-agent -q updatestartuptty /bye
+            fi
+          '';
+        };        
 
         default = "i3";
       };
@@ -365,6 +377,17 @@ in
           after       = [ "network-online.target" ];
           wantedBy    = [ "default.target" ];
         };
+
+	udiskie = {
+	  description = "Automounter for removable media";
+
+	  serviceConfig = {
+	    ExecStart = "${pkgs.udiskie}/bin/udiskie -f ''";
+	    Restart   = "always";
+	  };
+
+	  wantedBy = [ "default.target" ];
+	};
       };
 
       timers = {
