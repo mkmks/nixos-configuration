@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 with pkgs.lib;
@@ -15,32 +11,35 @@ let
 in
 
 {
-  imports =
-    [ ./hardware-configuration.nix
-    ];
+  imports = [ ./hardware-configuration.nix ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.cleanTmpDir = true;
-
-  hardware.bluetooth.enable = true;
-  hardware.opengl.driSupport32Bit = true;
+  boot = {
+    cleanTmpDir = true;
+    earlyVconsoleSetup = true;
+  };
   
-  hardware.pulseaudio = {
-    enable = true;
-    package = pkgs.pulseaudioFull;
-    support32Bit = true;
-
-    tcp = {
-      enable = true;
-      anonymousClients.allowedIpRanges = ["127.0.0.1"];
+  hardware = {
+    bluetooth.enable = true;
+    cpu.intel.updateMicrocode = true;
+    
+    opengl = {
+      driSupport32Bit = true;
+      extraPackages = with pkgs; [ vaapiIntel vaapiVdpau libvdpau-va-gl ];  
     };
 
-#    extraConfig = ''
-#      load-module module-switch-on-connect
-#    '';
-  };
+    pulseaudio = {
+      enable = true;
+      package = pkgs.pulseaudioFull;
+      support32Bit = true;
+    };
 
+    trackpoint = {
+      enable = true;
+      sensitivity = 100;
+      speed = 80;
+    };
+  };
+  
   networking = {
     hostName = "schildpad";
 
@@ -55,7 +54,6 @@ in
     };
     
     networkmanager.enable = true;
-    # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
     extraHosts = ''
       127.0.0.1 googlesyndication.com
@@ -73,17 +71,14 @@ in
     # proxy.noProxy = "localhost, 127.0.0.0/8, ::1, rutracker.org, libgen.io";
   };
 
-  # Select internationalisation properties.
   i18n = {
      consoleFont = "${pkgs.terminus_font}/share/consolefonts/ter-m32n.psf.gz";
+     consolePackages = [ pkgs.terminus_font ];
      consoleUseXkbConfig = true;
      defaultLocale = "fr_FR.UTF-8";
   };
 
-  # Set your time zone.
   time.timeZone = "Europe/Stockholm";
-
-  # List packages installed in system profile.
 
   nixpkgs.config = {
 
@@ -99,7 +94,9 @@ in
   environment = {
   
     sessionVariables = {
-      _JAVA_AWT_WM_NONREPARENTING = "1";    
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+      GDK_SCALE = "2";
+      GDK_DPI_SCALE= "0.5";
       GTK_THEME = "Adwaita:dark";
       GTK_PATH = "${config.system.path}/lib/gtk-3.0:${config.system.path}/lib/gtk-2.0";
     };
@@ -111,7 +108,7 @@ in
       skypeforlinux
       spotify
       steam
-      unstable.tdesktop      
+      unstable.tdesktop
 
       gnome3.adwaita-icon-theme
       gnome3.dconf-editor
@@ -120,7 +117,6 @@ in
       gnome3.libsecret
       gnome3.seahorse
       baobab
-      gnome-mpv
       gthumb
       pavucontrol
 
@@ -128,6 +124,7 @@ in
       calibre
       goldendict
       qpdfview
+      vlc
 
       # system
       acpi
@@ -198,12 +195,12 @@ in
   };
     
   fonts = {
+    fontconfig.dpi = 210;
     fonts = with pkgs; [
       cm_unicode
       font-awesome_4
       source-code-pro
       kochi-substitute
-      terminus_font
       wqy_zenhei
     ];
   };
@@ -251,8 +248,6 @@ in
     '';
   };
 
-  # List services that you want to enable:
-
   services = {
     dbus.packages = [ pkgs.gnome3.dconf ];
     gnome3.gnome-keyring.enable = true;
@@ -260,10 +255,10 @@ in
     emacs = {
       enable = true;
       defaultEditor = true;
-      #  package = unstable.emacs26.override { withGTK2 = false; withGTK3 = true; };
-	    };
+	  };
 
     fstrim.enable = true;
+    gpm.enable = true;
     illum.enable = true;
 
     openssh.enable = false;
@@ -298,18 +293,18 @@ in
     transmission.home = "/home/transmission";
     udisks2.enable = true;
         
-    
-    # Enable the X11 windowing system.
     xserver = {
       enable = true;
 
-      dpi = 160;
+      dpi = 210;
 
       layout = "us(colemak),ru";
       xkbOptions = "grp:rctrl_toggle,compose:prsc,caps:ctrl_modifier";
 
       libinput = {
-        accelSpeed = "0.4";
+        enable = true;
+        accelProfile = "flat";
+        accelSpeed = "0.5";
         clickMethod = "clickfinger";
         disableWhileTyping = true;
         naturalScrolling = true;
@@ -324,7 +319,7 @@ in
           enable = true;
           extraPackages = with pkgs; [ dmenu unstable.i3status-rust i3lock ];
           extraSessionCommands = ''
-	    xcalib /etc/X11/B140QAN02_0_02-10-2018.icm
+            xcalib /etc/X11/B140QAN02_0_02-10-2018.icm
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
 
@@ -341,26 +336,6 @@ in
   };
 
   systemd = {
-    services.powertop = {
-      description = ''
-        enables powertop's recommended settings on boot
-      '';
-      wantedBy = [ "multi-user.target" ];
-
-      path = with pkgs; [ powertop ];
-
-      environment = {
-        TERM = "dumb";
-      };
-
-      serviceConfig = {
-        Type = "idle";
-        User = "root";
-        ExecStart = ''
-          ${pkgs.powertop}/bin/powertop --auto-tune
-        '';
-      };
-  };
 
     user = {
       services = {    
@@ -378,16 +353,16 @@ in
           wantedBy    = [ "default.target" ];
         };
 
-	udiskie = {
-	  description = "Automounter for removable media";
+        udiskie = {
+          description = "Automounter for removable media";
 
-	  serviceConfig = {
-	    ExecStart = "${pkgs.udiskie}/bin/udiskie -f ''";
-	    Restart   = "always";
-	  };
+          serviceConfig = {
+            ExecStart = "${pkgs.udiskie}/bin/udiskie -f ''";
+            Restart   = "always";
+          };
 
-	  wantedBy = [ "default.target" ];
-	};
+          wantedBy = [ "default.target" ];
+        };
       };
 
       timers = {
@@ -403,8 +378,7 @@ in
       };
     };
   };
-  
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+
   users.users.viv = {
     description = "Nikita Frolov";
     extraGroups = [ "wheel" "transmission" "adbusers" ];
@@ -413,7 +387,5 @@ in
     shell = pkgs.fish;
   };
 
-  # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "18.09";
-
 }
