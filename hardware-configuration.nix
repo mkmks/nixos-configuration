@@ -4,6 +4,8 @@
   imports = [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix> ];
 
   boot = {
+    earlyVconsoleSetup = true;
+
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -13,7 +15,7 @@
       availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "i915" ];
       luks.devices = [
         { name = "nixos";
-          device = "/dev/nvme0n1p4";
+          device = "/dev/nvme0n1p5";
           preLVM = true; }
       ];
     };
@@ -39,6 +41,12 @@
       fsType = "vfat";
     };
 
+    "/openbsd" =
+    { device = "/dev/disk/by-uuid/5be3f57ef9f3024e";
+      fsType = "ufs";
+      options = [ "ufstype=44bsd" ];
+    };    
+
     "/windows" =
     { device = "/dev/disk/by-uuid/1EDA2966DA293B81";
       fsType = "ntfs-3g";
@@ -50,6 +58,18 @@
   nix.maxJobs = lib.mkDefault 8;
 
   # ThinkPad X1 6G QHD (copied from nixos-hardware)
+
+  hardware = {
+    bluetooth.enable = true;
+    cpu.intel.updateMicrocode = true;
+    trackpoint = {
+      enable = true;
+      emulateWheel = true;
+      sensitivity = 100;
+      speed = 80;
+    };
+    usbWwan.enable = true;
+  };
 
   systemd.services = {
     cpu-throttling = {

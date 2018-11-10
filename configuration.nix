@@ -15,13 +15,9 @@ in
 
   boot = {
     cleanTmpDir = true;
-    earlyVconsoleSetup = true;
   };
   
   hardware = {
-    bluetooth.enable = true;
-    cpu.intel.updateMicrocode = true;
-    
     opengl = {
       driSupport32Bit = true;
       extraPackages = with pkgs; [ vaapiIntel vaapiVdpau libvdpau-va-gl ];  
@@ -31,12 +27,6 @@ in
       enable = true;
       package = pkgs.pulseaudioFull;
       support32Bit = true;
-    };
-
-    trackpoint = {
-      enable = true;
-      sensitivity = 100;
-      speed = 80;
     };
   };
   
@@ -81,7 +71,6 @@ in
   time.timeZone = "Europe/Stockholm";
 
   nixpkgs.config = {
-
     allowUnfree = true;
 
     packageOverrides = pkgs: rec {
@@ -103,7 +92,7 @@ in
   
     systemPackages = with pkgs; with haskellPackages; [
       # desktop
-      firefox-bin
+      google-chrome
       libreoffice
       skypeforlinux
       spotify
@@ -284,8 +273,13 @@ in
       user = "viv";
     };
 
+    privoxy = {
+      enable = false;
+      enableEditActions = true;
+    };
+
     tor = {
-      enable = true;
+      enable = false;
       client.enable = true;
     };
 
@@ -317,7 +311,7 @@ in
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ dmenu unstable.i3status-rust i3lock ];
+          extraPackages = with pkgs; [ dmenu i3status i3lock ];
           extraSessionCommands = ''
             xcalib /etc/X11/B140QAN02_0_02-10-2018.icm
             xsetroot -bg black
