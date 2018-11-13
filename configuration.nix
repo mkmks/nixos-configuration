@@ -115,57 +115,59 @@ in
       qpdfview
       vlc
 
-      # system
+      # base
       acpi
       bc
       coreutils
-      dos2unix
-      dvtm
-      exiftool
-      fdupes
+      dnsutils
       file
       findutils
+      inetutils
+      iw
       lm_sensors
-      mc
-      nox
-      oathToolkit
+      msmtp
       pamixer
       pciutils
-      powertop
       psmisc
+      unzip
+      which
+      usbutils
+      xorg.xev
+      xorg.xkill
+
+      # base-extra
+      dos2unix
+      exiftool
+      fdupes
+      mc
+      nox
+      powertop
       p7zip
       silver-searcher
       tmuxPlugins.sensible
       udiskie
-      unzip
-      usbutils
-      which
       xcalib
-      xorg.xev
-      xorg.xkill
 
-      # development
+      # dev
       clang
       gdb
-      gitAndTools.git
       gnumake
-      haskellPackages.hlint
       manpages
+
+      # dev-extra
+      gitAndTools.git
       mercurial
-      linuxPackages.perf
       sloccount
+      valgrind
+      linuxPackages.perf
+      haskellPackages.hlint
       haskellPackages.stylish-haskell
       haskellPackages.threadscope
-      valgrind
 
       # networking
-      dnsutils
       gnupg
-      inetutils
-      iw
       isync
       lftp
-      msmtp
       mu
       nmap      
 
@@ -175,7 +177,6 @@ in
       isabelle
 
       # publishing
-      briss
       pkgs.exif
       pkgs.imagemagick
       pdftk
