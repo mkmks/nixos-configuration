@@ -135,62 +135,41 @@ in
       dnsutils
       file
       findutils
+      gnupg      
+      gitAndTools.git
       inetutils
       iw
       lm_sensors
-      msmtp
+      manpages
+      mercurial      
+      mc
+      nox      
+      p7zip      
       pamixer
       pciutils
+      powertop
       psmisc
+      silver-searcher
+      tmuxPlugins.sensible
+      udiskie
       unzip
       which
       usbutils
       xorg.xev
       xorg.xkill
-
-      # base-extra
-      dos2unix
-      exiftool
-      fdupes
-      mc
-      nox
-      powertop
-      p7zip
-      silver-searcher
-      tmuxPlugins.sensible
-      udiskie
       xcalib
 
-      # dev
-      clang
-      gdb
-      gnumake
-      manpages
-
-      # dev-extra
-      gitAndTools.git
-      mercurial
-      sloccount
-      valgrind
-      linuxPackages.perf
-      haskellPackages.hlint
-      haskellPackages.stylish-haskell
-      haskellPackages.threadscope
-
-      # networking
-      gnupg
+      # net
       isync
       lftp
       mu
+      msmtp      
       nmap      
 
-      # provers
-      haskellPackages.Agda AgdaStdlib
-      coq
-      isabelle
-
-      # publishing
+      # img
       pkgs.exif
+      exiftool
+      fdupes      
       pkgs.imagemagick
       pdftk
       xfig
