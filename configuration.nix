@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 with pkgs.lib;
-with pkgs.haskell.lib;
 
 let
   unstableTarball = fetchTarball https://nixos.org/channels/nixpkgs-unstable/nixexprs.tar.xz;
@@ -103,8 +102,8 @@ in
       GTK_PATH = "${config.system.path}/lib/gtk-3.0:${config.system.path}/lib/gtk-2.0";
     };
   
-    systemPackages = with pkgs; with haskellPackages; [
-      # desktop
+    systemPackages = with pkgs; [
+      # desktop-brands
       google-chrome
       libreoffice
       skypeforlinux
@@ -112,6 +111,7 @@ in
       steam
       unstable.tdesktop
 
+      # desktop-gtk
       gnome3.adwaita-icon-theme
       gnome3.dconf-editor
       gnome3.eog
@@ -122,6 +122,7 @@ in
       gthumb
       pavucontrol
 
+      # desktop-qt
       unstable.adwaita-qt
       calibre
       goldendict
